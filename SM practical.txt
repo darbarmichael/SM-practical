@@ -1,0 +1,319 @@
+Practical No. 1 
+Study of webpage structure using source code. 
+ 
+AIM: To study the structure of a webpage by inspecting its HTML source code and 
+identifying common HTML elements, attributes, headings, links, images, metadata and page 
+sections. 
+ 
+Theory: A webpage is primarily built using HTML (Hyper Text Markup Language). The 
+browser reads HTML tags and builds the Document Object Model (DOM). The source code 
+shows how content is organized. 
+ 
+Program: 
+File name: Index.HTML 
+ 
+<!DOCTYPE html> 
+<html> 
+<head> 
+    <title>Student Learning Portal</title> 
+    <meta name="description" content="Learning resources for students"> 
+</head> 
+<body> 
+    <header> 
+        <h1>Student Learning Portal</h1> 
+        <p>Welcome to the learning page.</p> 
+    </header> 
+ 
+    <section> 
+        <h2>Web Development</h2> 
+        <a href="https://example.com">Visit Resource</a> 
+        <img src="logo.png" alt="College Logo"> 
+    </section> 
+</body> 
+</html> 
+ 
+Output: 
+ 
+The browser displays the webpage with the heading “Student Learning Portal”. The source 
+code contains the title, meta description, H1, H2, link and image elements. 
+
+
+
+Practical No. 2 
+SEO analysis of a website (H1, meta tags, keywords) using Google Search Console. 
+ 
+AIM: To analyze basic SEO information of a website using Google Search Console, including 
+indexing status, search queries, pages, impressions, clicks and page-level SEO elements. 
+ 
+Theory: To analyze basic SEO information of a website using Google Search Console, 
+including indexing status, search queries, pages, impressions, clicks and page-level SEO 
+elements. 
+ 
+Program: 
+No programming code is required for this practical. The analysis is performed using Google 
+Search Console and browser source/Developer Tools. 
+ 
+Example observation: Clicks = 125, Impressions = 4,500, CTR = 2.8%, Average position = 
+18.6. Page source may show one <h1>, a <title>, and a meta description. Values depend on 
+the selected verified property and date range. 
+ 
+RESULT: Basic SEO and Google Search performance elements were analyzed using Search 
+Console and webpage source code.
+
+
+
+Practical No. 3 
+                           Data collection using Twitter API. 
+ 
+AIM: To collect recent public posts from Twitter/X using its API and store selected fields for 
+social media analysis. 
+ 
+Theory: An API (Application Programming Interface) allows a program to request data from 
+a service in a structured way. The Twitter/X API can provide public post data when the 
+required developer access and permissions are available. 
+ 
+Program: 
+File name: Twitter.py 
+ 
+import tweepy 
+import pandas as pd 
+ 
+bearer_token = "Paste Your API Token" 
+ 
+client = tweepy.Client( 
+    bearer_token=bearer_token, 
+    wait_on_rate_limit=True 
+) 
+ 
+query = "digital marketing -is:retweet lang:en" 
+ 
+data = [] 
+ 
+try: 
+    response = client.search_recent_tweets( 
+        query=query, 
+        max_results=20, 
+        tweet_fields=["created_at", "public_metrics", "author_id"] 
+    ) 
+ 
+    if response.data: 
+        for tweet in response.data: 
+            data.append({ 
+                "Tweet": tweet.text, 
+                "Date": tweet.created_at, 
+                "Author ID": tweet.author_id,
+                "Likes": tweet.public_metrics["like_count"], 
+                "Retweets": tweet.public_metrics["retweet_count"], 
+                "Replies": tweet.public_metrics["reply_count"] 
+            }) 
+    elif response.errors: 
+        print("Twitter API returned errors:") 
+        for error in response.errors: 
+            print(error) 
+    else: 
+        print("No tweets found for the current query.") 
+ 
+except Exception as e: 
+    print("Twitter API request failed.") 
+    print(f"Reason: {e}") 
+    print("Check your internet connection, bearer token, and Twitter API access.") 
+    raise SystemExit(1) 
+ 
+df = pd.DataFrame(data) 
+ 
+print(df) 
+ 
+df.to_csv("twitter_data.csv", index=False) 
+ 
+print("\nData collected successfully.") 
+ 
+ 
+Commands to Execute: 
+pip install tweepy pandas 
+python Twitter.py 
+ 
+Output (Python): 
+When the script works successfully, it will print the tweet data in a table format and save it as 
+a CSV file named twitter_data.csv in the same folder. However, in the current run, the script 
+did not fetch data because the Twitter API is Paid and it shows Timed out, so the terminal 
+showed a network/API error instead of tweet output. 
+
+
+
+Practical No. 4 
+Data collection using web scraping (BeautifulSoup). 
+AIM: To collect structured text data from a webpage using Python requests and 
+BeautifulSoup. 
+Theory: Web scraping means programmatically reading information from webpages. The 
+requests library downloads the webpage response, while BeautifulSoup parses the HTML and 
+provides methods for finding tags and extracting text. Scraping should respect a website’s 
+terms, robots rules, rate limits and access restrictions. Only publicly accessible and permitted 
+content should be collected. 
+
+Program: 
+File name: Webscraping.py 
+
+import requests 
+from bs4 import BeautifulSoup 
+url = "https://www.paruluniversity.ac.in/" 
+response = requests.get(url) 
+soup = BeautifulSoup(response.text, "html.parser") 
+print("Title:", soup.title.string if soup.title else "No Title") 
+h1_tags = soup.find_all("h1") 
+print("H1 Count:", len(h1_tags)) 
+for h1 in h1_tags: 
+     print("H1:", h1.get_text(strip=True)) 
+meta_tags = soup.find_all("meta") 
+print("Meta Tags Count:", len(meta_tags)) 
+
+
+Commands to Execute: 
+pip install requests beautifulsoup4 
+python Webscraping.py 
+
+Output (Python): 
+Title: Top NAAC A++ Accredited University in Gujarat – Parul University 
+H1 Count: 1 
+H1: One Place, Different Paths We have something for everyone! 
+Meta Tags Count: 18 
+
+
+
+Practical No. 5 
+Data preprocessing using Pandas - Cleaning and Standardization. 
+ 
+AIM: To clean and standardize a small social media dataset using Pandas. 
+ 
+Theory: Raw social media data can contain extra spaces, inconsistent capitalization, duplicate 
+rows and empty values. Pandas provides Data Frame operations for cleaning and transforming 
+tabular data. Cleaning before analysis improves the consistency of later tokenization, sentiment 
+analysis and visualization. 
+ 
+Program: 
+File Name: Clean.py 
+ 
+import pandas as pd 
+ 
+data = { 
+    "user": ["Aman", "Riya", "Aman", "Kabir"], 
+    "text": [ 
+        " AWS is GREAT! ", 
+        "Good cloud session", 
+        " AWS is GREAT! ", 
+        None 
+    ] 
+} 
+ 
+df = pd.DataFrame(data) 
+ 
+df = df.drop_duplicates() 
+df["text"] = df["text"].fillna("") 
+df["text"] = df["text"].str.strip().str.lower() 
+ 
+print("Cleaned Data:") 
+print(df) 
+ 
+Commands to Execute: 
+pip install pandas 
+python preprocess_Clean.py
+
+Output: 
+Cleaned Data: 
+user                
+0   
+text 
+Aman       aws is great! 
+1   
+Riya  good cloud session 
+3  Kabir  
+RESULT: Duplicate, missing and formatting issues were handled using Pandas 
+
+
+
+
+Practical No. 6 
+Data preprocessing using Pandas - Missing Values,  
+Duplicates and Data Types 
+
+AIM: To perform common preprocessing operations such as missing-value handling, 
+duplicate removal and data-type conversion using Pandas. 
+Theory: Preprocessing converts raw data into a consistent form suitable for analysis. Missing 
+values can be removed or replaced depending on the purpose of the dataset. Duplicate records 
+may distort frequency and sentiment results. Pandas also supports conversion of columns to 
+numeric or datetime types, which is useful for filtering and visualization. 
+
+Program: 
+File name: Data.py 
+
+import pandas as pd 
+df = pd.DataFrame({ 
+"post": ["Good product", "Bad service", "Good product", None], 
+"likes": ["10", "5", "10", "3"] 
+}) 
+print(df.info()) 
+df = df.drop_duplicates() 
+df["post"] = df["post"].fillna("unknown") 
+df["likes"] = pd.to_numeric(df["likes"], errors="coerce") 
+df["likes"] = df["likes"].fillna(0) 
+df.to_csv("processed_social_data.csv", index=False) 
+print(df) 
+print("Processed file saved.") 
+
+Commands to Execute: 
+pip install pandas 
+python preprocess_Data.py 
+
+ 
+Output: 
+0  Good product     10 
+1   Bad service      5 
+3       unknown      3 
+Processed file saved. 
+ 
+Processed file saved. 
+post,likes 
+Good product,10 
+Bad service,5 
+unknown,3  
+ 
+RESULT: The dataset was preprocessed using Pandas with appropriate missing-value, 
+duplicate and data-type operations.
+
+
+
+
+Practical No. 7 
+Tokenization and Stop Word Removal 
+AIM: To tokenize text into words and remove common stop words using NLTK. 
+Theory: Tokenization breaks a sentence into smaller units called tokens. Word tokenization is 
+commonly used before text classification and sentiment analysis. Stop words are frequently 
+occurring words such as “the”, “is” and “and” that may contribute less information in some 
+text-mining tasks. Stop-word removal is task-dependent and should not be applied blindly 
+because some common words can carry meaning in sentiment or context. 
+
+Program: 
+File name: nltk_demo.py 
+
+import nltk 
+from nltk.tokenize import word_tokenize 
+from nltk.corpus import stopwords 
+nltk.download("punkt") 
+nltk.download("punkt_tab") 
+nltk.download("stopwords") 
+text = "This is a very useful cloud computing course." 
+tokens = word_tokenize(text) 
+stop_words = set(stopwords.words("english")) 
+filtered = [ 
+word for word in tokens 
+if word.lower() not in stop_words 
+] 
+print("Tokens:", tokens) 
+print("After stop word removal:", filtered) 
+
+Commands to Execute: 
+pip install nltk 
+python nltk_demo.py 
+
+Output: 
+Tokens: ['This', 'is', 'a', 'very', 'useful', 'cloud', 'computing', 'course', '.'] 
+After stop word removal: ['useful', 'cloud', 'computing', 'course', '.'] 
